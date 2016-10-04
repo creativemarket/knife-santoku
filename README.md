@@ -30,41 +30,42 @@ And if you reallly love santoku just make it an alias, put it in your profile, a
 
 ## Configuration
 
-Put something like this in your config/santoku-before.rb or config/santoku-after.rb. These matchers will make sure that only commands that alter the chef server send off a notification.
+Put something like this in your ~/.chef/santoku-before.rb or ~/.chef/santoku-after.rb. These matchers will make sure that only commands that alter the chef server send off a notification.
 
 	match /spork/ do
-	  notify :hipchat, "Someone used the spork plugin"
+	  notify :slack, "Someone used the spork plugin"
 	end
 
 	match /from file/ do
-	  notify :hipchat
+	  notify :slack
 	end
 
 	require 'etc'
 	match /cookbook upload (.*)/ do |cookbook|
-	  notify :hipchat, "#{Etc.getlogin} finished uploading #{cookbook}"
+	  notify :slack, "#{Etc.getlogin} finished uploading #{cookbook}"
 	end
 
 	match /create/ do
-	  notify :hipchat
+	  notify :slack
+	end
+
+	match /ssh/ do
+	  notify :slack
 	end
 
 	match /delete/ do
-	  notify :hipchat
+	  notify :slack
 	end
 
-	match /bootstrap/ do 
-	  notify :hipchat
+	match /bootstrap/ do
+	  notify :slack
 	end
 	
-Put this in config/santoku-config.yml
+Put this in ~/.ssh/santoku-config.yml
 
-	hipchat:
-	    token: "your_hipchat_api_token"
-	    room: "developers"
-	    from: "Knife"
-	    notify: false
-	    color:  "yellow"
+	slack:
+	  username: "Knife"
+	  hook: "your slack webhook url"
 
 After configuring all of that you should start receiving notifications in your hipchat room whenever someone alters something on the server with knife. This can easily be adapted to add in notifications to other services.
 
