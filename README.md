@@ -65,7 +65,9 @@ Put this in ~/.ssh/santoku-config.yml
 
 	slack:
 	  username: "Knife"
-	  hook: "your slack webhook url"
+	  hook:
+	    chef-server-url: "your slack webhook url"
+	    another-chef-server: "another slack webhook url"
 
 After configuring all of that you should start receiving notifications in your hipchat room whenever someone alters something on the server with knife. This can easily be adapted to add in notifications to other services.
 
