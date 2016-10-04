@@ -1,5 +1,6 @@
 require 'httparty'
 require 'json'
+require 'chef/knife'
 
 module KnifeSantoku
   module Notification
@@ -7,16 +8,19 @@ module KnifeSantoku
 
       def initialize(config)
         @username = config['slack']['username']
-        @hook = config['slack']['hook']
+        server = Chef::Config[:knife][:chef_server_url]
+        hooks = config['slack']['hook'].to_hash
+        knife = ::Chef::Knife.new
+        @hook = hooks[knife.server_url]
       end
 
       def notify(msg)
         payload = {
           username: @username,
-          icon_emoji: ':knife:'
+          icon_emoji: ':knife:',
           text: msg
         }
-        HTTParty.post(url, body: payload.to_json, headers: { 'Content-Type' => 'application/json' })
+        HTTParty.post(@hook, body: payload.to_json, headers: { 'Content-Type' => 'application/json' })
       end
 
     end
