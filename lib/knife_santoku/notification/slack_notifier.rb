@@ -15,6 +15,22 @@ module KnifeSantoku
       end
 
       def notify(msg)
+        msg = msg.split(' ')
+        skip_next = false
+        redacted = []
+        msg.each do |arg|
+          if skip_next == true
+            skip = true
+            skip_next = false
+          end
+          if arg == '-P'
+            skip = true
+            skip_next = true
+          end
+          redacted << arg unless skip
+        end
+        msg = redacted.join(' ')
+
         payload = {
           username: @username,
           icon_emoji: ':knife:',
